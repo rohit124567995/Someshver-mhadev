@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Someshwar Mahadev Somakothi</title>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root{
+      --accent: #ffdd66;
+      --glass: rgba(255,255,255,0.05);
+      --card-bg: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;color:#fff;font-family:Poppins,system-ui,Arial,sans-serif;scroll-behavior:smooth}
+    a{color:inherit}
+    body{
+  background: linear-gradient(135deg, #050505 0%, #0a0a1a 25%, #281b53 55%, #ff007f 80%, #00c8ff 100%);
+}
+
+
+    /* HERO */
+    .hero{
+      height:100vh;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.35));
+      overflow:hidden;
+    }
+    /* BACKGROUND IMAGE behind overlay (parallax via GSAP) */
+    .hero-bg{
+      position:absolute;inset:0;background-position:center;background-size:cover;z-index:0;
+      transform: translateZ(0);
+      filter: brightness(0.45) saturate(0.9);
+    }
+    .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6));z-index:1}
+
+    .hero-inner{position:relative;z-index:2;text-align:center;padding:32px}
+    .hero-title{
+      font-size: clamp(28px, 5vw, 56px);
+      line-height:1.02;
+      font-weight:800;
+      color:var(--accent);
+      text-shadow:0 0 18px rgba(255,210,120,0.18);
+    }
+    .hero-sub{color:#fff9; font-size:18px;margin-top:12px}
+
+    /* small pointer hint */
+    .scroll-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;z-index:3;color:#fff9;font-size:14px;opacity:.85}
+
+    /* Page content area */
+    main{max-width:1200px;margin: 40px auto;padding: 0 20px 80px;}
+
+    /* Large card style */
+    /* Large card style */
+.card {
+  display: flex;
+  gap: 52px;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  margin: 140px 0;
+  overflow: visible;
+  transform-origin: center;
+  
+  /* ⭐ New height */
+  min-height: 700px;
+  height: 700px;
+}
+
+/* alternate */
+.card.reverse{flex-direction:row-reverse}
+
+/* MEDIA (video/image) */
+.media{
+  width:55%;              /* ⭐ Bigger */
+  height:100%;            /* ⭐ Full height */
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 10px 45px rgba(0,0,0,0.65);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));
+}
+
+.media img, .media video{
+  width:100%;
+  height:100%;
+  object-fit:cover;       /* ⭐ Fills neatly */
+  display:block;
+  filter: grayscale(100%) contrast(.95) brightness(.95);
+  transition: filter .9s ease, transform 1s ease;
+  transform-origin:center;
+}
+
+/* TEXT */
+.text {
+  width:45%;              /* ⭐ Bigger text area */
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center; /* ⭐ vertically centered */
+  height:100%;
+}
+
+.text h3{
+  margin:0 0 18px 0;
+  color:var(--accent);
+  font-size:2rem;         /* bigger heading */
+  letter-spacing:.6px
+}
+
+.text p{
+  margin:0;
+  color:#eee;
+  font-size:1.25rem;      /* bigger font */
+  line-height:1.95;
+  font-weight:400;
+  min-height:120px;       /* more space for typing effect */
+}
+
+/* Responsive */
+@media (max-width:900px){
+  .card{flex-direction:column; height:auto; min-height:auto;}
+  .card.reverse{flex-direction:column}
+  .media, .text{width:100%; height:auto; min-height:280px;}
+  .media{min-height:280px}
+  .text p{font-size:1.05rem}
+}
+
+    /* Glowing card outline on hover (subtle) */
+    .card:hover{ box-shadow: 0 16px 60px rgba(255,200,60,0.06), inset 0 1px 0 rgba(255,255,255,0.02); transform: translateY(-6px) }
+
+    /* Make initial state for GSAP reveal */
+    .card[data-hidden="true"]{opacity:0; transform: translateY(48px);}
+
+    /* Footer */
+    footer{
+      padding:36px 20px; text-align:center; color:var(--accent); font-weight:700;
+      letter-spacing:0.6px;background:transparent;margin-top:40px;
+    }
+
+    /* Responsive */
+    @media (max-width:900px){
+      .card{flex-direction:column}
+      .card.reverse{flex-direction:column}
+      .media, .text{width:100%}
+      .media{min-height:220px}
+      .hero-title{font-size:36px}
+    }
+
+    /* FINAL HISTORY BOX STYLE */
+.history-box{
+  max-width: 1100px;
+  margin: 120px auto;
+  padding: 40px 32px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  box-shadow: 0 0 35px rgba(255, 200, 60, 0.15), inset 0 0 12px rgba(255, 200, 60, 0.05);
+  backdrop-filter: blur(6px);
+  animation: glowPulse 4s infinite ease-in-out;
+}
+
+.history-glow-title{
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(255,220,120,0.4), 0 0 32px rgba(255, 210, 130, 0.6);
+  margin-bottom: 22px;
+}
+
+.history-text{
+  color: #eee;
+  line-height: 1.9;
+  font-size: 1.12rem;
+  white-space: pre-line;
+}
+
+/* Glow breathing animation */
+@keyframes glowPulse{
+  0%{ box-shadow: 0 0 25px rgba(255,200,60,0.10);}
+  50%{ box-shadow: 0 0 45px rgba(255,200,60,0.25);}
+  100%{ box-shadow: 0 0 25px rgba(255,200,60,0.10);}
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero" id="hero">
+    <div id="heroBg" class="hero-bg" style="background-image:url('https://scontent.fixc1-7.fna.fbcdn.net/v/t1.6435-9/147032862_961332171338142_3624381812060895740_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_ohc=QKsMDGOmrlkQ7kNvwHlku2Y&_nc_oc=Adn9TG5kdmbJLgQrIsEqlLYvrkX2Z11bmZtxQAuT1oTe8QIZJwweCY9jwniwJrNv3Gk&_nc_zt=23&_nc_ht=scontent.fixc1-7.fna&_nc_gid=rpDkkZqpEYpF914PK_pirQ&oh=00_AfnU-RvJGaDwOmGBDzxazH6KgmAbFUAhqnNDvtXazc8h6w&oe=696091CC');"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <!-- Title where we will reveal word-by-word -->
+      <div id="heroTitle" class="hero-title" aria-hidden="true"></div>
+      <div class="hero-sub">सोमेश्वर महादेव सोमाकोठी — Divine story in animated sequence</div>
+    </div>
+<audio id="bg-music" autoplay loop playsinline>
+    <source src="./vidios/shiv.mp3" type="audio/mp3">
+</audio>
+
+    <div class="scroll-hint">Scroll to explore ↓</div>
+  </header>
+
+  <!-- MAIN CONTENT (cards) -->
+  <main id="main">
+    <!-- CARD 1: image right / text left -->
+    <section class="card reverse" data-hidden="true" data-words="tibet-origin">
+      <div class="media">
+        <!-- replace src with your mp4 or gif or jpg -->
+        <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean1.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Origin — Bhēkhad-Bharād (Tibet)</h3>
+        <p data-full="देवता का मूल स्थान तिब्बत के भेखड़-भराड़ नामक स्थान माना जाता है, परंतु देवता उस स्थान से सोमाकोठी नामक स्थान पर विराजमान हुए. / The deity's origin is believed to be Bhekhar-Bharad in Tibet; later he appeared at Somakothi."> </p>
+      </div>
+    </section>
+
+    <!-- CARD 2: image left / text right -->
+    <section class="card" data-hidden="true" data-words="king-destruction">
+      <div class="media">
+        <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean2.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Wrath on King Nounja — Leaving the kingdom</h3>
+        <p data-full="तिब्बत से सोमाकोठी आने के कारण कहा जाता है कि राजा नौंजा का प्रजा पर अत्याचार एवं क्रूरता जिसे सोमशी सहन नहीं कर सका । / Due to the cruelty of King Nounja, Someshi could not tolerate and used his power against the tyranny."> </p>
+      </div>
+    </section>
+
+    <!-- CARD 3 -->
+    <section class="card reverse" data-hidden="true" data-words="journey">
+      <div class="media">
+       <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean3.mp4" type="video/mp4">
+</video>
+
+       
+      </div>
+      <div class="text">
+        <h3>Journey to Sumbli & Garjub</h3>
+        <p data-full="राजा नौंजा के राज्य को अपनी शक्ति से भस्म कर अपने आप उस स्थान को छोड़ हिमाचल देवभूमि के सुंबली नामक गांव में प्रकट हो गए। / After destroying the king's realm, he manifested at the Sumbli village in Himachal."></p>
+      </div>
+    </section>
+
+    <!-- CARD 4 -->
+    <section class="card" data-hidden="true" data-words="rest-deodar">
+      <div class="media">
+        <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean4.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Rest under Deodar</h3>
+        <p data-full="गरजुब में एक देवदार वृक्ष के नीचे आराम किया उसके बाद करसोग देलग नामक गांव में प्रकट हुए। / He rested beneath a deodar tree in Garjub before appearing in Delag."></p>
+      </div>
+    </section>
+
+    <!-- CARD 5 (Plough reveal) -->
+    <section class="card reverse" data-hidden="true" data-words="plough-reveal">
+      <div class="media">
+        <!-- If you have an mp4, replace <img> with <video autoplay muted loop playsinline> -->
+        <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean5.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Plough Discovery — Delag</h3>
+        <p data-full="करसोग देलग नामक गांव में ब्राह्मण के एक खेत में हल चलाते समय मिट्टी से देवता प्रकट हुए — हल की नोक ने ठोड़ी के पास हल्का सा छेद किया। / While ploughing, the plough revealed a golden face; its tip grazed the chin slightly."></p>
+      </div>
+    </section>
+
+    <!-- CARD 6 (Dream) -->
+    <section class="card" data-hidden="true" data-words="dream">
+      <div class="media">
+      <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean6.mp4" type="video/mp4">
+</video>
+
+      </div>
+      
+
+      <div class="text">
+        <h3>The Divine Dream</h3>
+        <p data-full="एक ब्राह्मणी को स्वप्न में देवता ने मंदिर निर्माण का आदेश दिया। / A Brahmani dreamt of the deity instructing her to build a temple."></p>
+      </div>
+    </section>
+
+    <!-- CARD 7 -->
+    <section class="card reverse" data-hidden="true" data-words="temple-construction">
+      <div class="media">
+      <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean7.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Temple Construction</h3>
+        <p data-full="लोगों ने मिलकर हजारों वर्ष पूर्व महाभारत काल में मंदिर का निर्माण किया और देव सुमी की स्थापना की। / The people built the ancient temple in Mahabharata-era and installed Dev Sumi."></p>
+      </div>
+    </section>
+
+    <!-- CARD 8 -->
+    <section class="card" data-hidden="true" data-words="legacy">
+      <div class="media">
+       <video class="floating" autoplay muted loop playsinline>
+    <source src="./vidios/sean8.mp4" type="video/mp4">
+</video>
+
+      </div>
+      <div class="text">
+        <h3>Legacy & Spread of Divinity</h3>
+        <p data-full="देव सुमी का वर्णन शिव महापुराण में है। आज भी आसपास के कई मंदिर देव कार्य करते हैं। / The deity's legend is in the Shiva Mahapurana; many temples continue the divine work."></p>
+      </div>
+    </section>
+
+  </main>
+  <!-- FINAL HISTORY BOX -->
+<section class="history-box">
+  <div class="history-glow-title">⚡ Complete History of Someshwar Mahadev Somakothi ⚡</div>
+
+  <p class="history-text">
+    सोमेश्वर महादेव जी का मूल स्थान तिब्बत के भेखड़-भराड़ नामक स्थान माना जाता है, परंतु देवता उस स्थान से सोमाकोठी नामक स्थान पर विराजमान हुए। तिब्बत से सोमाकोठी आने के कारण इस प्रकार कहा जाता है कि राजा नौंजा का प्रजा पर अत्याचार एवं क्रूरता जिसे सोमशी सहन नहीं कर सका। राजा नौंजा के राज्य को अपनी शक्ति से भस्म की ढेरी में बदल कर अपने आप उस स्थान को छोड़ हिमाचल देवभूमि के सुंबली नामक गांव में प्रकट हो गए, वहां पर भी कुछ समय बीत जाने के बाद न जाने किस कारण सुंबली से डिबरा बाई होते भमार ढोर नामक स्थान से होते हुए गरजुब में एक देवदार वृक्ष के नीचे आराम किया उसके बाद करसोग देलग नामक गांव में ब्राह्मण के एक खेत में हल चलाते समय मिट्टी से प्रकट हुए, जिसके फलस्वरूप देलग में एक गरीब ब्राह्मण वंश में एक ही अकेली औरत को स्वप्र में पूरा हवाला बता कर मंदिर का निर्माण करने को कहा। उस ब्राह्मणी ने प्रजा को बताया और लोगों ने हजारों वर्ष पूर्व महाभारत काल में मंदिर का निर्माण किया, जहां देव सुमी की स्थापना हुई और तब से देव सुमी के नाम से जानने लगे। इसके बाद इस स्थान का नाम भी सोमाकोठी ही रखा गया। अपनी शक्ति से देव सोमी ने इलाका रामगढ़ जिसमें छह पंचायतें हैं तथा इलाका चौरासी गढ़ जिसमें भी छह पंचायतें हैं। इसमें भी देवता ने अपनी शक्तियों का आभास करवाया देवता ने अपनी शक्ति से कई मंदिरों के देव कार्य करने के अधिकार अपनी कार्यक्षेत्र में रखे हैं, जो आज भी ममलेश्वर महादेव मंदिर, नाग धुमनी, तेबनी महादेव, बैंशी महादेव आदि मंदिरों में मौजूद हैं। देओ सुमी का वर्णन शिव महापुराण में श्री सोमेश्वर महादेव के नाम से है। इनका पुरात्तन प्रमाण शिव महापुराण के श्लोकों में वर्णित है। 
+  </p>
+</section>
+
+
+  <footer>
+    जय सोमेश्वर महादेव — Website created by Rohit
+  </footer>
+
+<script>
+/* ------------------------------------
+  JS controls:
+  - Hero word-by-word reveal
+  - On-scroll card reveal (GSAP)
+  - Typing / word-by-word text reveal per card when it enters
+  - Image color shift on reveal
+------------------------------------ */
+
+/* ------------------------------------
+  Smooth Scroll + Card Slide-Up Upgrade
+------------------------------------ */
+
+gsap.registerPlugin(ScrollTrigger);
+
+/* ---------- GLOBAL SMOOTH SCROLL ---------- */
+gsap.to({}, {
+  duration: 0.12,
+  scrollTrigger: {
+    trigger: "body",
+    start: "top top",
+    end: "bottom bottom",
+    scrub: 1,
+  }
+});
+
+/* ---------- HERO WORD-BY-WORD ---------- */
+const heroWords = ["Jai","Someshwar","Mahadev 🙏"];
+const heroTitle = document.getElementById('heroTitle');
+
+(function revealHeroWords(){
+  heroTitle.innerHTML = ''; 
+  let i = 0;
+  function addWord(){
+    if(i >= heroWords.length) return;
+    const span = document.createElement('span');
+    span.style.opacity = 0;
+    span.style.display = "inline-block";
+    span.style.marginRight = "10px";
+    span.textContent = heroWords[i];
+    heroTitle.appendChild(span);
+
+    gsap.fromTo(span, {y:18, opacity:0}, {opacity:1, y:0, duration:.65, ease:"power3.out"});
+    i++;
+    setTimeout(addWord, 450);
+  }
+  addWord();
+})();
+
+/* ---------- CARD REVEAL + SLIDE-UP ---------- */
+const cards = document.querySelectorAll('.card');
+
+cards.forEach((card) => {
+  ScrollTrigger.create({
+    trigger: card,
+    start: "top 80%",
+    onEnter: () => revealCard(card),
+    onEnterBack: () => revealCard(card)
+  });
+});
+
+function revealCard(card){
+  if(card.getAttribute('data-hidden') === "false") return;
+
+  card.setAttribute('data-hidden','false');
+
+  // upgraded slide-up animation
+  gsap.fromTo(card,
+    {opacity: 0, y: 90, scale: 0.96},
+    {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1.4,
+      ease: "power3.out"
+    }
+  );
+
+  // image color pop
+  const img = card.querySelector('.media img, .media video');
+  if(img){
+    gsap.to(img, {filter:"grayscale(0%)", duration:1, ease:"power2.out"});
+    gsap.fromTo(img, {scale:1.05}, {scale:1, duration:1.4, ease:"elastic.out(1,0.6)"});
+  }
+
+  // typing effect
+  const p = card.querySelector('p[data-full]');
+  if(p) startWordTyping(p);
+}
+
+/* ---------- Word-by-word typing ---------- */
+function startWordTyping(pEl){
+  if(pEl.getAttribute('data-typed') === "true") return;
+  pEl.setAttribute('data-typed','true');
+
+  const full = pEl.getAttribute('data-full') || "";
+  const words = full.split(' ');
+  pEl.innerHTML = "";
+  let idx = 0;
+
+  function add(){
+    if(idx >= words.length) return;
+
+    const span = document.createElement('span');
+    span.textContent = words[idx] + " ";
+    span.style.opacity = 0;
+
+    pEl.appendChild(span);
+
+    gsap.fromTo(span, {y:6, opacity:0}, {opacity:1, y:0, duration:0.45, ease:"power2.out"});
+    idx++;
+    setTimeout(add, 120);
+  }
+  add();
+}
+const audio = document.getElementById("bg-music");
+
+// Try muted autoplay (allowed)
+window.addEventListener("load", () => {
+    audio.muted = true;
+    audio.play().catch(err => console.log("Muted autoplay error:", err));
+});
+
+// When user interacts, unmute + play
+function enableAudio() {
+    audio.muted = false;
+    audio.volume = 1.0;
+
+    audio.play().then(() => {
+        console.log("Audio playing!");
+    }).catch(err => console.log("Unmute error:", err));
+
+    document.removeEventListener("click", enableAudio);
+    document.removeEventListener("touchstart", enableAudio);
+}
+
+document.addEventListener("click", enableAudio);
+document.addEventListener("touchstart", enableAudio);
+
+/* ---------- HERO PARALLAX ---------- */
+const heroBg = document.getElementById('heroBg');
+if(heroBg){
+  gsap.to(heroBg, {
+    yPercent: 10,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: 1
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
